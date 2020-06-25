@@ -6,7 +6,7 @@
 # getting your token
 Run this in your developer console on https://www.minecraft.net/en-us/profile after logging into minecraft.net
 ```js
-n$=text=>{if(navigator.clipboard)return navigator.clipboard.writeText(text);};n$(prompt('Here is your token for fastsnipe', document.cookie.split(';').find(i=>i.includes('bearer_token=')).split('=')[1]))
+(a=>{if(navigator&&navigator.clipboard)return navigator.clipboard.writeText(a)})(prompt('Here is your token for fastsnipe',document.cookie.split(';').find(b=>b.includes('bearer_token=')).split('=')[1]))
 ```
 
 # building
