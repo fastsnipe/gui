@@ -29,6 +29,7 @@ void FastSnipeWindow::set_status_of_stage2(bool status) {
 	ui->txtWantedName->setEnabled(status);
 	ui->lblThreads->setEnabled(status);
 	ui->sldThreads->setEnabled(status);
+	ui->chkNoDelay->setEnabled(status);
 	ui->btnSave->setEnabled(status);
 }
 
@@ -127,6 +128,7 @@ void FastSnipeWindow::btnlogin_clicked() {
 	}
 	ui->txtUsername->setText(QString::fromStdString(res.username));
 	ui->txtUUID->setText(QString::fromStdString(res.uuid));
+	ui->txtToken->setText(QString::fromStdString(res.access_token));
 	ui->lblStatus->setStyleSheet("QLabel{color: green;}");
 	ui->lblStatus->setText("Success!");
 	

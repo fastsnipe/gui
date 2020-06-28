@@ -112,7 +112,7 @@ login_response_t mojang::login_with_password(QWidget* widget, const std::string 
 		QDialog dialog(widget);
 		QFormLayout form(&dialog);
 		std::vector<security_question_t> questions;
-		
+		dialog.setWindowTitle("Security questions required");
 		for (auto& obj : ch_j) {
 			auto txt = new QLineEdit(&dialog);
 			auto label = QString("%1 (%2)")
@@ -176,6 +176,6 @@ login_response_t mojang::login_with_token(const std::string token) {
 	res.successful = true;
 	res.uuid = mc_j[0]["id"].get<std::string>();
 	res.username = mc_j[0]["name"].get<std::string>();
-	
+	res.access_token = token.c_str();
 	return res;
 }
