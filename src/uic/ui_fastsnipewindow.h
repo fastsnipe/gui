@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
@@ -46,6 +47,7 @@ public:
     QLabel *lblPassword;
     QLineEdit *txtToken;
     QLabel *lblToken;
+    QCheckBox *chkNoDelay;
 
     void setupUi(QMainWindow *FastSnipeWindow)
     {
@@ -162,6 +164,10 @@ public:
         lblToken->setObjectName(QString::fromUtf8("lblToken"));
         lblToken->setGeometry(QRect(40, 110, 61, 20));
         lblToken->setFont(font1);
+        chkNoDelay = new QCheckBox(centralwidget);
+        chkNoDelay->setObjectName(QString::fromUtf8("chkNoDelay"));
+        chkNoDelay->setGeometry(QRect(310, 240, 181, 20));
+        chkNoDelay->setFont(font1);
         FastSnipeWindow->setCentralWidget(centralwidget);
         QWidget::setTabOrder(txtEmail, txtPassword);
         QWidget::setTabOrder(txtPassword, txtToken);
@@ -179,7 +185,7 @@ public:
 
     void retranslateUi(QMainWindow *FastSnipeWindow)
     {
-        FastSnipeWindow->setWindowTitle(QCoreApplication::translate("FastSnipeWindow", "FastSnipeWindow", nullptr));
+        FastSnipeWindow->setWindowTitle(QCoreApplication::translate("FastSnipeWindow", "FastSnipe", nullptr));
         lblStage1R->setText(QCoreApplication::translate("FastSnipeWindow", "<html><head/><body><p><span style=\" font-size:10pt;\">Login with your Mojang account<br/></span><span style=\" color:#a6a6a6;\">Your login details will only be shared with Mojang</span></p></body></html>", nullptr));
         lblStage1->setText(QCoreApplication::translate("FastSnipeWindow", "1", nullptr));
         lblEmail->setText(QCoreApplication::translate("FastSnipeWindow", "Email", nullptr));
@@ -195,6 +201,7 @@ public:
         lblThreads->setText(QCoreApplication::translate("FastSnipeWindow", "Threads (20)", nullptr));
         lblPassword->setText(QCoreApplication::translate("FastSnipeWindow", "Password", nullptr));
         lblToken->setText(QCoreApplication::translate("FastSnipeWindow", "Token", nullptr));
+        chkNoDelay->setText(QCoreApplication::translate("FastSnipeWindow", "No delay between requests", nullptr));
     } // retranslateUi
 
 };

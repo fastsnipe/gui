@@ -1,5 +1,12 @@
 #include "mojang.hpp"
 #include "../http/http.hpp"
+#include <QDialog>
+#include <QFormLayout>
+#include <QLineEdit>
+#include <QDebug>
+#include <QList>
+#include <QDialogButtonBox>
+#include <QMessageBox>
 namespace mojang {
 	std::string last_error = "";
 }
@@ -68,6 +75,83 @@ bool mojang::validate(const std::string token) {
 	auto j2 = json::parse(resp);
 	last_error = j2["errorMessage"].get<std::string>();
 	return false;
+}
+
+struct security_question_t {
+	long id;
+	const char* question;
+	QLineEdit* line_edit;
+};
+
+login_response_t mojang::login_with_password(QWidget* widget, const std::string email, const std::string password) {
+	login_response_t res;
+	json authenticate_payload = {
+        {"username", email},
+        {"password", password},
+        {"requestUser", true}
+    };
+    auto auth_resp = http::post("https://authserver.mojang.com/authenticate", authenticate_payload.dump().c_str());
+    auto auth_j = json::parse(auth_resp);
+    if (!auth_j["error"].is_null()) {
+        // auth failed, error out
+        last_error = auth_j["errorMessage"].get<std::string>();
+        res.successful = false;
+        return res;
+    }
+	const auto token = auth_j["accessToken"].get<std::string>();
+	auto ch_resp = http::get("https://api.mojang.com/user/security/challenges", token.c_str());
+	auto ch_j = json::parse(ch_resp);
+	http::get("https://api.mojang.com/user/security/location", token.c_str());
+	if (http::last_status_code == 204) {
+		// no security questions needed
+		return login_with_token(token);
+	}
+	if (ch_j.is_array()) {
+		// multiple qlineedit dialog box
+		// adapted from https://stackoverflow.com/a/17512615
+		QDialog dialog(widget);
+		QFormLayout form(&dialog);
+		std::vector<security_question_t> questions;
+		
+		for (auto& obj : ch_j) {
+			auto txt = new QLineEdit(&dialog);
+			auto label = QString("%1 (%2)")
+				.arg(obj["question"]["question"].get<std::string>().c_str())
+				.arg(obj["answer"]["id"].get<long>());
+			form.addRow(label, txt);
+			questions.push_back({
+				obj["answer"]["id"].get<long>(),
+				obj["question"]["question"].get<std::string>().c_str(),
+				txt
+			});
+		}
+		QDialogButtonBox button_box(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
+		form.addRow(&button_box);
+		if (dialog.exec() == QDialog::Accepted) {
+			auto payload = json::array();
+			for (auto const& question: questions) {
+				payload.push_back({
+					{"id", question.id},
+					{"answer", question.line_edit->text().toStdString()}
+				});
+			}
+			auto loc_resp = http::post("https://api.mojang.com/user/security/location", payload.dump().c_str(), token.c_str());
+			if (http::last_status_code == 204) { // success
+				return login_with_token(token);
+			}
+			auto loc_j = json::parse(loc_resp);
+			if (loc_j.contains("error")) {
+				res.successful = false;
+				last_error = loc_j["errorMessage"].get<std::string>();
+				return res;
+			}
+		} else {
+			res.successful = false;
+			last_error = "You did not opt to fill in the security questions.";
+			return res;
+		}
+	}
+	return login_with_token(token);
 }
 
 login_response_t mojang::login_with_token(const std::string token) {

@@ -46,20 +46,23 @@ void FastSnipeWindow::load_settings_from_disk() {
 		stream << f.rdbuf(); //read the file
 		const auto str = stream.str();
 		const auto j = json::parse(str);
-		if (!j["auth"].is_null()) {
-			if (!j["auth"]["email"].is_null()) ui->txtEmail->setText(QString::fromStdString(j["auth"]["email"].get<std::string>()));
-			if (!j["auth"]["password"].is_null()) ui->txtPassword->setText(QString::fromStdString(j["auth"]["password"].get<std::string>()));
-			//if (!j["auth"]["uuid"].is_null()) ui->txtUUID->setText(QString::fromStdString(j["auth"]["uuid"].get<std::string>()));
-			if (!j["auth"]["token"].is_null()) ui->txtToken->setText(QString::fromStdString(j["auth"]["token"].get<std::string>()));
+		if (j.contains("auth")) {
+			if (j["auth"].contains("email")) ui->txtEmail->setText(QString::fromStdString(j["auth"]["email"].get<std::string>()));
+			if (j["auth"].contains("password")) ui->txtPassword->setText(QString::fromStdString(j["auth"]["password"].get<std::string>()));
+			//if (j["auth"].contains("uuid")) ui->txtUUID->setText(QString::fromStdString(j["auth"]["uuid"].get<std::string>()));
+			if (j["auth"].contains("token")) ui->txtToken->setText(QString::fromStdString(j["auth"]["token"].get<std::string>()));
+			if (j["auth"].contains("client_token")) {} // TODO: do something with client_token (in future)
 		}
-		if (!j["wanted"].is_null()) {
-			if (!j["wanted"]["name"].is_null()) ui->txtWantedName->setText(QString::fromStdString(j["wanted"]["name"].get<std::string>()));
+		if (j.contains("wanted")) {
+			if (j["wanted"].contains("name")) ui->txtWantedName->setText(QString::fromStdString(j["wanted"]["name"].get<std::string>()));
 		}
-		if (!j["threading"].is_null()) {
-			if (!j["threading"]["threads"].is_null()) ui->sldThreads->setValue(j["threading"]["threads"].get<int>());
+		if (j.contains("threading")) {
+			if (j["threading"].contains("threads")) ui->sldThreads->setValue(j["threading"]["threads"].get<int>());
+			if (j["threading"].contains("no_delay")) ui->chkNoDelay->setChecked(j["threading"]["no_delay"].get<bool>());
 		}
 	}
 }
+
 void FastSnipeWindow::btnsave_clicked() {
 	// generate json for cfg
 	json j = {
@@ -81,7 +84,8 @@ void FastSnipeWindow::btnsave_clicked() {
 		{
 			"threading",
 			{
-				{"threads", ui->sldThreads->value()}
+				{"threads", ui->sldThreads->value()},
+				{"no_delay", ui->chkNoDelay->isChecked()}
 			}
 		}
 	};
@@ -104,7 +108,11 @@ void FastSnipeWindow::btnsave_clicked() {
 	msg_box.exec();
 }
 void FastSnipeWindow::btnlogin_clicked() {
-	res = mojang::login_with_token(ui->txtToken->text().toStdString());
+	if (ui->txtToken->text().isEmpty()) {
+		res = mojang::login_with_password(this, ui->txtEmail->text().toStdString(), ui->txtPassword->text().toStdString());
+	} else { // atempt login with token
+		res = mojang::login_with_token(ui->txtToken->text().toStdString());
+	}
 	if (!res.successful) {
 		set_status_of_stage2(false);
 		ui->lblStatus->setStyleSheet("QLabel{color: red;}");

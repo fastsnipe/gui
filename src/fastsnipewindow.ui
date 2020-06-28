@@ -32,7 +32,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>FastSnipeWindow</string>
+   <string>FastSnipe</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="lblStage1R">
@@ -400,6 +400,24 @@
     </property>
     <property name="text">
      <string>Token</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="chkNoDelay">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>240</y>
+      <width>181</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>No delay between requests</string>
     </property>
    </widget>
   </widget>

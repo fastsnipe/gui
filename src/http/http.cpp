@@ -1,5 +1,9 @@
 #include "http.hpp"
 
+namespace http {
+	int last_status_code = 0;
+}
+
 /**
  * https://stackoverflow.com/a/36401787
  * Adapted to fit codestyle
@@ -24,6 +28,7 @@ std::string http::get(const char* url) {
 	curl_easy_setopt(req, CURLOPT_WRITEFUNCTION, curlwrite_callbackfunc_stdstring);
 	curl_easy_setopt(req, CURLOPT_WRITEDATA, &s);
 	/*auto res = */ curl_easy_perform(req);
+	curl_easy_getinfo(req, CURLINFO_RESPONSE_CODE, &last_status_code);
 	curl_easy_cleanup(req);
 
 #ifdef _DEBUG
@@ -44,9 +49,9 @@ std::string http::get(const char* url, const char* token) {
 	struct curl_slist *chunk = nullptr;
 	chunk = curl_slist_append(chunk, (std::string("Authorization: Bearer ") + token).c_str());
 	chunk = curl_slist_append(chunk, "Charset: utf-8");
-	chunk = curl_slist_append(chunk, "Charset: utf-8");
 	curl_easy_setopt(req, CURLOPT_HTTPHEADER, chunk);
 	/*auto res = */ curl_easy_perform(req);
+	curl_easy_getinfo(req, CURLINFO_RESPONSE_CODE, &last_status_code);
 	curl_easy_cleanup(req);
 
 #ifdef _DEBUG
@@ -70,8 +75,8 @@ std::string http::post(const char* url, const char* data) {
 	chunk = curl_slist_append(chunk, "Content-Type: application/json");
 	chunk = curl_slist_append(chunk, "Charset: utf-8");
 	curl_easy_setopt(req, CURLOPT_HTTPHEADER, chunk);
-	
 	/*auto res = */ curl_easy_perform(req);
+	curl_easy_getinfo(req, CURLINFO_RESPONSE_CODE, &last_status_code);
 	curl_easy_cleanup(req);
 
 #ifdef _DEBUG
@@ -96,7 +101,8 @@ std::string http::post(const char* url, const char* data, const char* token) {
 	curl_easy_setopt(req, CURLOPT_HTTPHEADER, chunk);
 	
 	/*auto res = */ curl_easy_perform(req);
-	//curl_easy_cleanup(req);
+	curl_easy_getinfo(req, CURLINFO_RESPONSE_CODE, &last_status_code);
+	curl_easy_cleanup(req);
 
 #ifdef _DEBUG
 	printf("(http) POST %s - length %llu - str %s\n", url, s.length(), s.c_str());
