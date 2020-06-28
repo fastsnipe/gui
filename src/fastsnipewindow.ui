@@ -34,6 +34,9 @@
   <property name="windowTitle">
    <string>FastSnipe</string>
   </property>
+  <property name="toolTip">
+   <string/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="lblStage1R">
     <property name="geometry">
@@ -99,9 +102,9 @@
    <widget class="QPushButton" name="btnLogin">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>200</x>
       <y>140</y>
-      <width>251</width>
+      <width>91</width>
       <height>23</height>
      </rect>
     </property>
@@ -383,6 +386,9 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="placeholderText">
+     <string>Not required, email/password to login</string>
+    </property>
    </widget>
    <widget class="QLabel" name="lblToken">
     <property name="geometry">
@@ -418,6 +424,24 @@
     </property>
     <property name="text">
      <string>No delay between requests</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblLoginInfo">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>140</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#a6a6a6;&quot;&gt;Fill in email/password inputs&lt;br/&gt;and press login&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#a6a6a6;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
   </widget>
