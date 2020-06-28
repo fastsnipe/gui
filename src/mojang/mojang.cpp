@@ -106,7 +106,7 @@ login_response_t mojang::login_with_password(QWidget* widget, const std::string 
 		// no security questions needed
 		return login_with_token(token);
 	}
-	if (ch_j.is_array()) {
+	if (ch_j.is_array() && !ch_j.empty()) {
 		// multiple qlineedit dialog box
 		// adapted from https://stackoverflow.com/a/17512615
 		QDialog dialog(widget);
