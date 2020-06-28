@@ -48,6 +48,7 @@ public:
     QLineEdit *txtToken;
     QLabel *lblToken;
     QCheckBox *chkNoDelay;
+    QLabel *lblLoginInfo;
 
     void setupUi(QMainWindow *FastSnipeWindow)
     {
@@ -86,7 +87,7 @@ public:
         lblEmail->setFont(font1);
         btnLogin = new QPushButton(centralwidget);
         btnLogin->setObjectName(QString::fromUtf8("btnLogin"));
-        btnLogin->setGeometry(QRect(40, 140, 251, 23));
+        btnLogin->setGeometry(QRect(200, 140, 91, 23));
         btnLogin->setFlat(false);
         label = new QLabel(centralwidget);
         label->setObjectName(QString::fromUtf8("label"));
@@ -168,6 +169,10 @@ public:
         chkNoDelay->setObjectName(QString::fromUtf8("chkNoDelay"));
         chkNoDelay->setGeometry(QRect(310, 240, 181, 20));
         chkNoDelay->setFont(font1);
+        lblLoginInfo = new QLabel(centralwidget);
+        lblLoginInfo->setObjectName(QString::fromUtf8("lblLoginInfo"));
+        lblLoginInfo->setGeometry(QRect(40, 140, 161, 31));
+        lblLoginInfo->setFont(font1);
         FastSnipeWindow->setCentralWidget(centralwidget);
         QWidget::setTabOrder(txtEmail, txtPassword);
         QWidget::setTabOrder(txtPassword, txtToken);
@@ -186,6 +191,9 @@ public:
     void retranslateUi(QMainWindow *FastSnipeWindow)
     {
         FastSnipeWindow->setWindowTitle(QCoreApplication::translate("FastSnipeWindow", "FastSnipe", nullptr));
+#if QT_CONFIG(tooltip)
+        FastSnipeWindow->setToolTip(QString());
+#endif // QT_CONFIG(tooltip)
         lblStage1R->setText(QCoreApplication::translate("FastSnipeWindow", "<html><head/><body><p><span style=\" font-size:10pt;\">Login with your Mojang account<br/></span><span style=\" color:#a6a6a6;\">Your login details will only be shared with Mojang</span></p></body></html>", nullptr));
         lblStage1->setText(QCoreApplication::translate("FastSnipeWindow", "1", nullptr));
         lblEmail->setText(QCoreApplication::translate("FastSnipeWindow", "Email", nullptr));
@@ -200,8 +208,10 @@ public:
         lblWantedName->setText(QCoreApplication::translate("FastSnipeWindow", "Name", nullptr));
         lblThreads->setText(QCoreApplication::translate("FastSnipeWindow", "Threads (20)", nullptr));
         lblPassword->setText(QCoreApplication::translate("FastSnipeWindow", "Password", nullptr));
+        txtToken->setPlaceholderText(QCoreApplication::translate("FastSnipeWindow", "Not required, email/password to login", nullptr));
         lblToken->setText(QCoreApplication::translate("FastSnipeWindow", "Token", nullptr));
         chkNoDelay->setText(QCoreApplication::translate("FastSnipeWindow", "No delay between requests", nullptr));
+        lblLoginInfo->setText(QCoreApplication::translate("FastSnipeWindow", "<html><head/><body><p><span style=\" color:#a6a6a6;\">Fill in email/password inputs<br/>and press login</span></p><p><span style=\" color:#a6a6a6;\"><br/></span></p></body></html>", nullptr));
     } // retranslateUi
 
 };
