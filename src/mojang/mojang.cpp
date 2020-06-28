@@ -127,6 +127,8 @@ login_response_t mojang::login_with_password(QWidget* widget, const std::string 
 		}
 		QDialogButtonBox button_box(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, &dialog);
 		form.addRow(&button_box);
+		QObject::connect(&button_box, SIGNAL(accepted()), &dialog, SLOT(accept()));
+		QObject::connect(&button_box, SIGNAL(rejected()), &dialog, SLOT(reject()));
 		if (dialog.exec() == QDialog::Accepted) {
 			auto payload = json::array();
 			for (auto const& question: questions) {
